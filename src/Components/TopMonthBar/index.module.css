@@ -1,0 +1,10 @@
+.main{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    font-size: 23px;
+    color: #007AFF;
+    background: #F7F7F7;
+    position: fixed;
+    width: 100%;
+}
