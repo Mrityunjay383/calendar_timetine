@@ -1,12 +1,12 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import classes from "./index.module.css";
-import { IoMdAddCircle } from "react-icons/io";
+import { FaPlusSquare } from "react-icons/fa";
 
 interface Props {
   // userName: string;
 }
 
-const resources: string[] = [
+const initResources: string[] = [
   "Resource 1",
   "Resource 2",
   "Resource 3",
@@ -15,13 +15,16 @@ const resources: string[] = [
 ];
 
 const ResourceSideBar: FC<Props> = () => {
-  const elementRef = useRef<HTMLDivElement | null>(null);
+  const [resources, setResources] = useState<string[]>(initResources);
+
+  //Element of the Resource Column
+  const columnRef = useRef<HTMLDivElement | null>(null);
 
   //Disabling vertical scroll of the component
   useEffect(() => {
     const handleScroll = () => {
-      if (elementRef.current) {
-        elementRef.current.style.transform = `translateX(${window.scrollX}px)`;
+      if (columnRef.current) {
+        columnRef.current.style.transform = `translateX(${window.scrollX}px)`;
       }
     };
 
@@ -33,7 +36,7 @@ const ResourceSideBar: FC<Props> = () => {
   }, []);
 
   return (
-    <div ref={elementRef} className={classes.main}>
+    <div ref={columnRef} className={classes.main}>
       {resources.map((resource, i) => {
         return (
           <div key={i} className={classes.resource}>
@@ -42,8 +45,8 @@ const ResourceSideBar: FC<Props> = () => {
         );
       })}
 
-      <div className={classes.resource}>
-        <IoMdAddCircle />
+      <div className={classes.addBtn}>
+        <FaPlusSquare />
       </div>
     </div>
   );

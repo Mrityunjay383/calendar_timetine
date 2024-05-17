@@ -11,3 +11,20 @@
     padding: 15px 10px;
     width: 10vw;
 }
+
+.addBtn{
+    border: 1px solid #ccc;
+    border-top: 0;
+    border-right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+}
+.addBtn svg{
+    font-size: 20px;
+    cursor: pointer;
+}
+.addBtn svg:hover{
+    color: #007AFF;
+}
