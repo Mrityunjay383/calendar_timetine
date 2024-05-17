@@ -23,6 +23,17 @@ export const getCurrentMonthAndYear = (): {
   return { currentMonth, currentYear };
 };
 
+// Array of weekday names
+const weekdayNames: string[] = [
+  "Sun",
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+];
+
 export const getDaysInCurrentMonth = (): string[] => {
   const date: Date = new Date();
   const year: number = date.getFullYear();
@@ -30,17 +41,6 @@ export const getDaysInCurrentMonth = (): string[] => {
 
   // Get the number of days in the current month
   const daysInMonth: number = new Date(year, month + 1, 0).getDate();
-
-  // Array of weekday names
-  const weekdayNames: string[] = [
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-  ];
 
   // Array to store the formatted date strings
   const daysArray: string[] = [];
@@ -52,4 +52,15 @@ export const getDaysInCurrentMonth = (): string[] => {
   }
 
   return daysArray;
+};
+
+export const getCurrentDayAndWeekday = (): string => {
+  const date: Date = new Date();
+  const day: number = date.getDate();
+
+  // Get the abbreviated day of the week
+  const dayName: string = weekdayNames[date.getDay()];
+
+  // Format the date as '1 Wed'
+  return `${day} ${dayName}`;
 };

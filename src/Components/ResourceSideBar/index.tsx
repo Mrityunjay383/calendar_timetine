@@ -1,5 +1,6 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef } from "react";
 import classes from "./index.module.css";
+import { IoMdAddCircle } from "react-icons/io";
 
 interface Props {
   // userName: string;
@@ -14,7 +15,7 @@ const resources: string[] = [
 ];
 
 const ResourceSideBar: FC<Props> = () => {
-  const elementRef = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<HTMLDivElement | null>(null);
 
   //Disabling vertical scroll of the component
   useEffect(() => {
@@ -40,6 +41,10 @@ const ResourceSideBar: FC<Props> = () => {
           </div>
         );
       })}
+
+      <div className={classes.resource}>
+        <IoMdAddCircle />
+      </div>
     </div>
   );
 };

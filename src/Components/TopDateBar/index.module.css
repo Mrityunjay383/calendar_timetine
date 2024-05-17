@@ -7,8 +7,18 @@
 }
 .column{
     width: 5vw;
+    height: 29px;
     border: 1px solid #CCCCCC;
     border-left: 0;
     padding: 0 5px;
     font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.active{
+    background: #007AFF;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 12px;
 }

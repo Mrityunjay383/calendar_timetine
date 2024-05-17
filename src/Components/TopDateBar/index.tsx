@@ -1,6 +1,9 @@
 import { FC, useEffect, useRef, useState } from "react";
 import classes from "./index.module.css";
-import { getDaysInCurrentMonth } from "../../Helpers/date";
+import {
+  getCurrentDayAndWeekday,
+  getDaysInCurrentMonth,
+} from "../../Helpers/date";
 
 interface Props {
   // userName: string;
@@ -8,14 +11,33 @@ interface Props {
 
 const TopDateBar: FC<Props> = () => {
   const [dates, setDates] = useState<string[]>([]);
+  const [currDate, setCurrDate] = useState<string>("");
+
+  const currDateColumnRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const fetchedDates: string[] = getDaysInCurrentMonth();
+    const scroll = () => {
+      currDateColumnRef.current.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+      });
+    };
 
+    window.addEventListener("load", scroll);
+
+    const fetchedDates: string[] = getDaysInCurrentMonth();
     setDates(fetchedDates);
+
+    const currentDate: string = getCurrentDayAndWeekday();
+
+    setCurrDate(currentDate);
+
+    return () => {
+      window.removeEventListener("load", scroll);
+    };
   }, []);
 
-  const elementRef = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<HTMLDivElement | null>(null);
 
   //Disabling vertical scroll of the component
   useEffect(() => {
@@ -37,7 +59,13 @@ const TopDateBar: FC<Props> = () => {
       {dates.map((date, i) => {
         return (
           <div key={i} className={classes.column}>
-            {date}
+            {date === currDate ? (
+              <span ref={currDateColumnRef} className={classes.active}>
+                {date}
+              </span>
+            ) : (
+              <span>{date}</span>
+            )}
           </div>
         );
       })}

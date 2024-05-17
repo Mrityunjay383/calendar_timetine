@@ -2,7 +2,6 @@
     position: absolute;
     top: 73px;
     z-index: -1;
-    height: 100%;
     border-right: 1px solid #ccc;
 }
 .resource{
