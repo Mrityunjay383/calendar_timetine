@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import classes from "./index.module.css";
 import { FaPlusSquare } from "react-icons/fa";
+import AddNewResourceModel from "../../Models/AddNewResourceModel";
 
 interface Props {
   // userName: string;
@@ -35,8 +36,17 @@ const ResourceSideBar: FC<Props> = () => {
     };
   }, []);
 
+  //AddNewResourceModel useState
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+
   return (
     <div ref={columnRef} className={classes.main}>
+      <AddNewResourceModel
+        modalIsOpen={modalIsOpen}
+        setIsOpen={setIsOpen}
+        setResources={setResources}
+      />
+
       {resources.map((resource, i) => {
         return (
           <div key={i} className={classes.resource}>
@@ -46,7 +56,7 @@ const ResourceSideBar: FC<Props> = () => {
       })}
 
       <div className={classes.addBtn}>
-        <FaPlusSquare />
+        <FaPlusSquare onClick={() => setIsOpen(true)} />
       </div>
     </div>
   );

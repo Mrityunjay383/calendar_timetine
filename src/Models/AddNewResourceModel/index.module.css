@@ -1,0 +1,40 @@
+.modelHead {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modelHead h2 {
+    font-weight: bolder;
+    color: #007AFF;
+}
+
+.closeIcon {
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.closeIcon:hover {
+    color: #FF5A60;
+}
+
+
+.inpFieldCom{
+    margin: 55px 0 20px;
+}
+.inpFieldCom label{
+    font-weight: bolder;
+    margin-right: 20px;
+}
+.inpFieldCom input{
+    padding: 5px 10px;
+    border: 1px solid #333;
+    width: 20vw;
+    background: #F7F7F7;
+}
+.inpFieldCom input:focus{
+    border-color: #007AFF;
+    outline-width: 0;
+}
+.delBtn{
+    margin-right: 25px;
+}
