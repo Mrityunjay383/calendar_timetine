@@ -28,39 +28,48 @@ const Events = ({
       setEvents((curr) => {
         return curr.filter((event) => event.id !== selectedEventId);
       });
+
+      // setIsOpen(true);
     }
   };
   useEffect(() => {
-    document.addEventListener("keyup", handleKeyPress);
+    document.addEventListener("keydown", handleKeyPress);
 
     return () => {
-      document.removeEventListener("keyup", handleKeyPress);
+      document.removeEventListener("keydown", handleKeyPress);
     };
   }, [selectedEventId]);
 
   const changeEventPos = (xLayer, xOSet, y, id) => {
     const thisEvent = events.find((ev) => ev.id === id);
 
-    thisEvent.pos = {
-      x: xLayer - xOSet,
-      y: locateYpos(y, rows),
-    };
+    const eX = xLayer - xOSet;
+    const eY = locateYpos(y, rows);
 
-    const newEvents = events.filter((ev) => ev.id !== id);
+    if (thisEvent.pos.x !== eX || thisEvent.pos.y !== eY) {
+      thisEvent.pos = {
+        x: eX,
+        y: eY,
+      };
 
-    setEvents([...newEvents, thisEvent]);
+      const newEvents = events.filter((ev) => ev.id !== id);
+
+      setEvents([...newEvents, thisEvent]);
+    }
   };
 
   const [resizeStartWidth, setResizeStartWidth] = useState<number>(0);
 
-  const resizeEvent = (dWidth, id) => {
-    const thisEvent = events.find((ev) => ev.id === id);
+  const resizeEvent = (direction, dWidth, id) => {
+    if (direction === "right") {
+      const thisEvent = events.find((ev) => ev.id === id);
 
-    thisEvent.width = resizeStartWidth + dWidth;
+      thisEvent.width = resizeStartWidth + dWidth;
 
-    const newEvents = events.filter((ev) => ev.id !== id);
+      const newEvents = events.filter((ev) => ev.id !== id);
 
-    setEvents([...newEvents, thisEvent]);
+      setEvents([...newEvents, thisEvent]);
+    }
   };
 
   return (
@@ -91,11 +100,21 @@ const Events = ({
             position={{ x: event.pos.x, y: event.pos.y }}
             key={event.id}
             id={event.id}
+            enableResizing={{
+              top: false,
+              right: true,
+              bottom: false,
+              left: false,
+              topRight: false,
+              bottomRight: false,
+              bottomLeft: false,
+              topLeft: false,
+            }}
             onResizeStart={() => {
               setResizeStartWidth(event.width);
             }}
             onResize={(e, direction, ref, delta) => {
-              resizeEvent(delta.width, event.id);
+              resizeEvent(direction, delta.width, event.id);
             }}
             onDragStop={(e) => {
               setSelectedEventId(event.id);

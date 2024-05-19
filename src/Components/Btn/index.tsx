@@ -5,13 +5,14 @@ interface Props {
   Text: string;
   fontSize: number;
   onClick?: () => void;
+  backgroundColor?: string;
 }
 
-const Btn: FC<Props> = ({ Text, fontSize, onClick }) => {
+const Btn: FC<Props> = ({ Text, fontSize, onClick, background }) => {
   return (
     <button
       className={classes.button3d}
-      style={{ fontSize: `${fontSize}px` }}
+      style={{ fontSize: `${fontSize}px`, background: background }}
       onClick={onClick}
     >
       {Text}
