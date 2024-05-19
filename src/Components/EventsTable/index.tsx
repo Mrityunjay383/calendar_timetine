@@ -2,7 +2,8 @@ import React, { FC, useEffect, useRef, useState } from "react";
 
 import classes from "./index.module.css";
 import { locateYpos } from "../../Helpers/locateYpos";
-import { generateUniqueColor } from "../../Helpers/genUniqueColor";
+import { generateUniqueColor, generateUniqueId } from "../../Helpers/genUnique";
+import { toast } from "react-toastify";
 
 interface Props {
   rowsColumnCount: { rows: number; columns: number };
@@ -17,6 +18,7 @@ interface event {
   pos: position;
   width: number;
   color: string;
+  id: string;
 }
 
 const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
@@ -24,21 +26,35 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const [CurrentEventEle, setCurrentEventEle] = useState<event>(null);
+  const [selectedEventId, setSelectedEventId] = useState<string>("");
+  const [events, setEvents] = useState([]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
-    setIsDragging(true);
 
-    const newEvent: event = {
-      pos: {
-        x: e.pageX - 150,
-        y: locateYpos(e.pageY - 80),
-      },
-      width: 2,
-      color: generateUniqueColor(),
-    };
+    const isAlreadyAnEventExist =
+      e.target.parentElement.className.includes("event") ||
+      e.target.className.includes("event");
 
-    setCurrentEventEle(newEvent);
+    if (!isAlreadyAnEventExist) {
+      setSelectedEventId("");
+
+      setIsDragging(true);
+
+      const newEvent: event = {
+        pos: {
+          x: e.pageX - 150,
+          y: locateYpos(e.pageY - 80),
+        },
+        width: 2,
+        color: generateUniqueColor(),
+        id: generateUniqueId(),
+      };
+
+      setCurrentEventEle(newEvent);
+    } else {
+      setSelectedEventId(e.target.parentElement.id);
+    }
   };
 
   const handleMouseMove = (e: MouseEvent): void => {
@@ -78,7 +94,27 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
     };
   }, [isDragging]);
 
-  const [events, setEvents] = useState([]);
+  const handleKeyPress = (e): void => {
+    if (e.code === "Delete") {
+      console.log(`#2024140195930241 selectedEventId`, selectedEventId);
+
+      if (selectedEventId === "") {
+        toast.error("No event is selected");
+        return;
+      }
+
+      setEvents((curr) => {
+        return curr.filter((event) => event.id !== selectedEventId);
+      });
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("keyup", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keyup", handleKeyPress);
+    };
+  }, [selectedEventId]);
 
   return (
     <div className={classes.main} ref={tableRef} onMouseDown={handleMouseDown}>
@@ -106,15 +142,20 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
           style={{
             left: `${CurrentEventEle.pos.x}px`,
             top: `${CurrentEventEle.pos.y}px`,
-            width: `${CurrentEventEle.width}px`,
-            background: CurrentEventEle.color,
           }}
         >
-          Event {"7"}
+          <div
+            style={{
+              background: CurrentEventEle.color,
+              width: `${CurrentEventEle.width}px`,
+            }}
+          >
+            Event {events.length + 1}
+          </div>
         </div>
       )}
 
-      {events.map(({ pos, width, color }, i) => {
+      {events.map(({ pos, width, color, id }, i) => {
         return (
           <div
             key={i}
@@ -122,11 +163,13 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
             style={{
               left: `${pos.x}px`,
               top: `${pos.y}px`,
-              width: `${width}px`,
-              background: color,
+              opacity: `${selectedEventId === id ? 1 : 0.7}`,
             }}
+            id={id}
           >
-            Event {"7"}
+            <div style={{ background: color, width: `${width}px` }}>
+              Event {i + 1}
+            </div>
           </div>
         );
       })}

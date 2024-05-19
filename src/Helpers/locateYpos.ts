@@ -3,5 +3,5 @@ export const locateYpos = (ypos: number): number => {
 
   const heightMultiple = Math.floor(ypos / heightOfRow);
 
-  return heightMultiple * heightOfRow + 15;
+  return heightMultiple * heightOfRow;
 };
