@@ -5,10 +5,6 @@ import TopDateBar from "../../Components/TopDateBar";
 import ResourceSideBar from "../../Components/ResourceSideBar";
 import EventsTable from "../../Components/EventsTable";
 
-interface Props {
-  // userName: string;
-}
-
 interface rowsColumn {
   rows: number;
   columns: number;
