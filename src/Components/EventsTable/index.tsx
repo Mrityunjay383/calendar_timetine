@@ -1,9 +1,9 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 
 import classes from "./index.module.css";
 import { locateYpos } from "../../Helpers/locateYpos";
 import { generateUniqueColor, generateUniqueId } from "../../Helpers/genUnique";
-import { toast } from "react-toastify";
+import Events from "../Events";
 
 interface Props {
   rowsColumnCount: { rows: number; columns: number };
@@ -19,10 +19,10 @@ interface event {
   width: number;
   color: string;
   id: string;
+  index: number;
 }
 
 const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
-  const tableRef = useRef<HTMLDivElement | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const [CurrentEventEle, setCurrentEventEle] = useState<event>(null);
@@ -44,16 +44,15 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
       const newEvent: event = {
         pos: {
           x: e.pageX - 150,
-          y: locateYpos(e.pageY - 80),
+          y: locateYpos(e.pageY - 80, rowsColumnCount.rows),
         },
         width: 2,
         color: generateUniqueColor(),
         id: generateUniqueId(),
+        index: events.length + 1,
       };
 
       setCurrentEventEle(newEvent);
-    } else {
-      setSelectedEventId(e.target.parentElement.id);
     }
   };
 
@@ -66,17 +65,21 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
   };
 
   const handleMouseUp = (e: MouseEvent) => {
-    setIsDragging(false);
+    if (isDragging) {
+      setIsDragging(false);
 
-    const newEventELe: event = CurrentEventEle;
+      const newEventELe: event = CurrentEventEle;
 
-    newEventELe.width = e.pageX - 150 - CurrentEventEle.pos.x;
+      newEventELe.width = e.pageX - 150 - CurrentEventEle.pos.x;
 
-    setEvents((curr) => {
-      return [...curr, newEventELe];
-    });
+      setEvents((curr) => {
+        return [...curr, newEventELe];
+      });
 
-    setCurrentEventEle(null);
+      setCurrentEventEle(null);
+    }
+
+    console.log(`#2024140221643224 e.pageX`, e.pageX);
   };
 
   useEffect(() => {
@@ -94,30 +97,8 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
     };
   }, [isDragging]);
 
-  const handleKeyPress = (e): void => {
-    if (e.code === "Delete") {
-      console.log(`#2024140195930241 selectedEventId`, selectedEventId);
-
-      if (selectedEventId === "") {
-        toast.error("No event is selected");
-        return;
-      }
-
-      setEvents((curr) => {
-        return curr.filter((event) => event.id !== selectedEventId);
-      });
-    }
-  };
-  useEffect(() => {
-    document.addEventListener("keyup", handleKeyPress);
-
-    return () => {
-      document.removeEventListener("keyup", handleKeyPress);
-    };
-  }, [selectedEventId]);
-
   return (
-    <div className={classes.main} ref={tableRef} onMouseDown={handleMouseDown}>
+    <div className={classes.main} onMouseDown={handleMouseDown}>
       {Array(rowsColumnCount.rows)
         .fill(1)
         .map((row, i) => {
@@ -136,43 +117,14 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
           );
         })}
 
-      {CurrentEventEle && (
-        <div
-          className={classes.event}
-          style={{
-            left: `${CurrentEventEle.pos.x}px`,
-            top: `${CurrentEventEle.pos.y}px`,
-          }}
-        >
-          <div
-            style={{
-              background: CurrentEventEle.color,
-              width: `${CurrentEventEle.width}px`,
-            }}
-          >
-            Event {events.length + 1}
-          </div>
-        </div>
-      )}
-
-      {events.map(({ pos, width, color, id }, i) => {
-        return (
-          <div
-            key={i}
-            className={classes.event}
-            style={{
-              left: `${pos.x}px`,
-              top: `${pos.y}px`,
-              opacity: `${selectedEventId === id ? 1 : 0.7}`,
-            }}
-            id={id}
-          >
-            <div style={{ background: color, width: `${width}px` }}>
-              Event {i + 1}
-            </div>
-          </div>
-        );
-      })}
+      <Events
+        selectedEventId={selectedEventId}
+        CurrentEventEle={CurrentEventEle}
+        events={events}
+        setEvents={setEvents}
+        setSelectedEventId={setSelectedEventId}
+        rows={rowsColumnCount.rows}
+      />
     </div>
   );
 };

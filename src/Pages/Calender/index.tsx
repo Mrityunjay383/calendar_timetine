@@ -1,5 +1,5 @@
 import classes from "./index.module.css";
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import TopMonthBar from "../../Components/TopMonthBar";
 import TopDateBar from "../../Components/TopDateBar";
 import ResourceSideBar from "../../Components/ResourceSideBar";
