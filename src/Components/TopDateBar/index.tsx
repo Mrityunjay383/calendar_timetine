@@ -39,6 +39,7 @@ const TopDateBar: FC<Props> = ({ setRowsColumnCount }) => {
 
     const fetchedDates: string[] = getDaysInCurrentMonth();
 
+    //Setting grid column based on the numbers of days in the month
     setRowsColumnCount((curr) => {
       return { ...curr, columns: fetchedDates.length };
     });

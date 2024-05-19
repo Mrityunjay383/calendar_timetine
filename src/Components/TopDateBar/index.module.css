@@ -1,12 +1,12 @@
 .main{
     position: absolute;
     top: 51px;
-    left: 10vw;
+    left: 150px;
     z-index: -1;
     display: flex;
 }
 .column{
-    width: 5vw;
+    width: 80px;
     height: 29px;
     border: 1px solid #CCCCCC;
     border-left: 0;
