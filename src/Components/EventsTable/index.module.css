@@ -19,5 +19,9 @@
 .event{
     position: absolute;
     height: 4vh;
-    background: #000;
+    /*background: #000;*/
+    overflow-x: hidden;
+    white-space: nowrap;
+    padding: 2px 11px;
+    border-radius: 5px;
 }

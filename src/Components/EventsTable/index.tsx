@@ -2,6 +2,7 @@ import React, { FC, useEffect, useRef, useState } from "react";
 
 import classes from "./index.module.css";
 import { locateYpos } from "../../Helpers/locateYpos";
+import { generateUniqueColor } from "../../Helpers/genUniqueColor";
 
 interface Props {
   rowsColumnCount: { rows: number; columns: number };
@@ -12,51 +13,54 @@ interface position {
   y: number;
 }
 
+interface event {
+  pos: position;
+  width: number;
+  color: string;
+}
+
 const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
   const tableRef = useRef<HTMLDivElement | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [position, setPosition] = useState<position>({ x: 0, y: 0 });
-  const [startPosition, setStartPosition] = useState<position>({ x: 0, y: 0 });
 
-  const [CurrentEventEle, setCurrentEventEle] = useState(null);
+  const [CurrentEventEle, setCurrentEventEle] = useState<event>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsDragging(true);
-    setStartPosition({
-      x: e.pageX,
-      y: e.pageY,
-    });
 
-    const newEvent = {
+    const newEvent: event = {
       pos: {
         x: e.pageX - 150,
         y: locateYpos(e.pageY - 80),
       },
-      width: 10,
+      width: 2,
+      color: generateUniqueColor(),
     };
 
-    setEvents((curr) => {
-      return [...curr, newEvent];
-    });
+    setCurrentEventEle(newEvent);
   };
 
   const handleMouseMove = (e: MouseEvent): void => {
     if (isDragging) {
-      setPosition({
-        x: e.pageX,
-        y: e.pageY,
+      setCurrentEventEle((curr) => {
+        return { ...curr, width: e.pageX - 150 - curr.pos.x };
       });
     }
   };
 
-  useEffect(() => {
-    // addNewEvent(false, position);
-  }, [position]);
-
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: MouseEvent) => {
     setIsDragging(false);
-    // addNewEvent(true);
+
+    const newEventELe: event = CurrentEventEle;
+
+    newEventELe.width = e.pageX - 150 - CurrentEventEle.pos.x;
+
+    setEvents((curr) => {
+      return [...curr, newEventELe];
+    });
+
+    setCurrentEventEle(null);
   };
 
   useEffect(() => {
@@ -75,11 +79,6 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
   }, [isDragging]);
 
   const [events, setEvents] = useState([]);
-
-  // const addNewEvent = (end: boolean, pos?: position) => {
-  //   console.log(`#2024140171331367 pos`, pos);
-  //   console.log(`#2024140171646388 end`, end);
-  // };
 
   return (
     <div className={classes.main} ref={tableRef} onMouseDown={handleMouseDown}>
@@ -101,7 +100,21 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
           );
         })}
 
-      {events.map(({ pos, width }, i) => {
+      {CurrentEventEle && (
+        <div
+          className={classes.event}
+          style={{
+            left: `${CurrentEventEle.pos.x}px`,
+            top: `${CurrentEventEle.pos.y}px`,
+            width: `${CurrentEventEle.width}px`,
+            background: CurrentEventEle.color,
+          }}
+        >
+          Event {"7"}
+        </div>
+      )}
+
+      {events.map(({ pos, width, color }, i) => {
         return (
           <div
             key={i}
@@ -110,8 +123,11 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
               left: `${pos.x}px`,
               top: `${pos.y}px`,
               width: `${width}px`,
+              background: color,
             }}
-          ></div>
+          >
+            Event {"7"}
+          </div>
         );
       })}
     </div>
