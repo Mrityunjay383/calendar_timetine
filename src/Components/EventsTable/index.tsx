@@ -59,7 +59,13 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
   const handleMouseMove = (e: MouseEvent): void => {
     if (isDragging) {
       setCurrentEventEle((curr) => {
-        return { ...curr, width: e.pageX - 150 - curr.pos.x };
+        let width = e.pageX - 150 - curr.pos.x;
+
+        if (e.pageX - 150 > rowsColumnCount.columns * 80) {
+          width = rowsColumnCount.columns * 80 - curr.pos.x;
+        }
+
+        return { ...curr, width };
       });
     }
   };
@@ -70,7 +76,13 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
 
       const newEventELe: event = CurrentEventEle;
 
-      newEventELe.width = e.pageX - 150 - CurrentEventEle.pos.x;
+      let width = e.pageX - 150 - CurrentEventEle.pos.x;
+
+      if (e.pageX - 150 > rowsColumnCount.columns * 80) {
+        width = rowsColumnCount.columns * 80 - CurrentEventEle.pos.x;
+      }
+
+      newEventELe.width = width;
 
       setEvents((curr) => {
         return [...curr, newEventELe];
