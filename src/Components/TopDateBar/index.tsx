@@ -1,4 +1,11 @@
-import { FC, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import classes from "./index.module.css";
 import {
   getCurrentDayAndWeekday,
@@ -6,10 +13,15 @@ import {
 } from "../../Helpers/date";
 
 interface Props {
-  // userName: string;
+  setRowsColumnCount: Dispatch<SetStateAction<RowsColumns>>;
 }
 
-const TopDateBar: FC<Props> = () => {
+interface RowsColumns {
+  rows: number;
+  columns: number;
+}
+
+const TopDateBar: FC<Props> = ({ setRowsColumnCount }) => {
   const [dates, setDates] = useState<string[]>([]);
   const [currDate, setCurrDate] = useState<string>("");
 
@@ -26,6 +38,11 @@ const TopDateBar: FC<Props> = () => {
     window.addEventListener("load", scroll);
 
     const fetchedDates: string[] = getDaysInCurrentMonth();
+
+    setRowsColumnCount((curr) => {
+      return { ...curr, columns: fetchedDates.length };
+    });
+
     setDates(fetchedDates);
 
     const currentDate: string = getCurrentDayAndWeekday();

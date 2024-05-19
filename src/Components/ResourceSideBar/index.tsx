@@ -1,10 +1,22 @@
-import { FC, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import classes from "./index.module.css";
 import { FaPlusSquare } from "react-icons/fa";
 import AddNewResourceModel from "../../Models/AddNewResourceModel";
 
 interface Props {
-  // userName: string;
+  setRowsColumnCount: Dispatch<SetStateAction<RowsColumns>>;
+}
+
+interface RowsColumns {
+  rows: number;
+  columns: number;
 }
 
 const initResources: string[] = [
@@ -15,7 +27,7 @@ const initResources: string[] = [
   "Resource 5",
 ];
 
-const ResourceSideBar: FC<Props> = () => {
+const ResourceSideBar: FC<Props> = ({ setRowsColumnCount }) => {
   const [resources, setResources] = useState<string[]>(initResources);
 
   //Element of the Resource Column
@@ -35,6 +47,12 @@ const ResourceSideBar: FC<Props> = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    setRowsColumnCount((curr) => {
+      return { ...curr, rows: resources.length };
+    });
+  }, [resources]);
 
   //AddNewResourceModel useState
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);

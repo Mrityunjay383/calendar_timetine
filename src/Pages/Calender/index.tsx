@@ -16,8 +16,8 @@ interface rowsColumn {
 
 const Calender: FC<Props> = () => {
   const [rowsColumnCount, setRowsColumnCount] = useState<rowsColumn>({
-    rows: 5,
-    columns: 31,
+    rows: 0,
+    columns: 0,
   });
 
   return (
@@ -26,8 +26,8 @@ const Calender: FC<Props> = () => {
 
       <div className={classes.tableCom}>
         <div className={classes.firstColumn}></div>
-        <TopDateBar />
-        <ResourceSideBar />
+        <TopDateBar setRowsColumnCount={setRowsColumnCount} />
+        <ResourceSideBar setRowsColumnCount={setRowsColumnCount} />
         <EventsTable rowsColumnCount={rowsColumnCount} />
       </div>
     </div>
