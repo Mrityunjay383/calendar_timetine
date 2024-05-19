@@ -60,16 +60,18 @@ const Events = ({
 
   const [resizeStartWidth, setResizeStartWidth] = useState<number>(0);
 
-  const resizeEvent = (direction, dWidth, id) => {
-    if (direction === "right") {
-      const thisEvent = events.find((ev) => ev.id === id);
+  const resizeEvent = (direction, xLayer, xOSet, dWidth, id) => {
+    const thisEvent = events.find((ev) => ev.id === id);
 
-      thisEvent.width = resizeStartWidth + dWidth;
+    thisEvent.width = resizeStartWidth + dWidth;
 
-      const newEvents = events.filter((ev) => ev.id !== id);
-
-      setEvents([...newEvents, thisEvent]);
+    if (direction === "left") {
+      thisEvent.pos.x = xLayer - xOSet;
     }
+
+    const newEvents = events.filter((ev) => ev.id !== id);
+
+    setEvents([...newEvents, thisEvent]);
   };
 
   return (
@@ -104,7 +106,7 @@ const Events = ({
               top: false,
               right: true,
               bottom: false,
-              left: false,
+              left: true,
               topRight: false,
               bottomRight: false,
               bottomLeft: false,
@@ -114,7 +116,13 @@ const Events = ({
               setResizeStartWidth(event.width);
             }}
             onResize={(e, direction, ref, delta) => {
-              resizeEvent(direction, delta.width, event.id);
+              resizeEvent(
+                direction,
+                e.layerX,
+                e.offsetX,
+                delta.width,
+                event.id
+              );
             }}
             onDragStop={(e) => {
               setSelectedEventId(event.id);
