@@ -10,7 +10,7 @@ interface rowsColumn {
   columns: number;
 }
 
-const Calender: FC<Props> = () => {
+const Calender: FC = () => {
   const [rowsColumnCount, setRowsColumnCount] = useState<rowsColumn>({
     rows: 0,
     columns: 0,
