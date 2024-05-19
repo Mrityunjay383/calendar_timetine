@@ -51,6 +51,18 @@ const Events = ({
     setEvents([...newEvents, thisEvent]);
   };
 
+  const [resizeStartWidth, setResizeStartWidth] = useState<number>(0);
+
+  const resizeEvent = (dWidth, id) => {
+    const thisEvent = events.find((ev) => ev.id === id);
+
+    thisEvent.width = resizeStartWidth + dWidth;
+
+    const newEvents = events.filter((ev) => ev.id !== id);
+
+    setEvents([...newEvents, thisEvent]);
+  };
+
   return (
     <>
       {CurrentEventEle && (
@@ -75,11 +87,16 @@ const Events = ({
       {events.map((event) => {
         return (
           <Rnd
-            // className={classes.event}
             size={{ width: event.width, height: 65 }}
             position={{ x: event.pos.x, y: event.pos.y }}
             key={event.id}
             id={event.id}
+            onResizeStart={() => {
+              setResizeStartWidth(event.width);
+            }}
+            onResize={(e, direction, ref, delta) => {
+              resizeEvent(delta.width, event.id);
+            }}
             onDragStop={(e) => {
               setSelectedEventId(event.id);
 
@@ -88,13 +105,9 @@ const Events = ({
           >
             <div
               style={{
-                // left: `${pos.x}px`,
-                // top: `${pos.y}px`,
                 opacity: `${selectedEventId === event.id ? 1 : 0.7}`,
               }}
               className={classes.event}
-              // onDrop={(e) => console.log(`#20241402122457 e Drop`, e)}
-              // onDragOver={(e) => console.log(`#202414021029162 e over`, e)}
             >
               <div
                 style={{ background: event.color, width: `${event.width}px` }}
