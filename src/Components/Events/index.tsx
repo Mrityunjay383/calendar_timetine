@@ -28,8 +28,6 @@ const Events = ({
       setEvents((curr) => {
         return curr.filter((event) => event.id !== selectedEventId);
       });
-
-      // setIsOpen(true);
     }
   };
   useEffect(() => {

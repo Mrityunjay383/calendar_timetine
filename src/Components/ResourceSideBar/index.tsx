@@ -28,7 +28,7 @@ const initResources: string[] = [
 ];
 
 const ResourceSideBar: FC<Props> = ({ setRowsColumnCount }) => {
-  const [resources, setResources] = useState<string[]>(initResources);
+  const [resources, setResources] = useState<string[]>([]);
 
   //Element of the Resource Column
   const columnRef = useRef<HTMLDivElement | null>(null);
@@ -49,9 +49,25 @@ const ResourceSideBar: FC<Props> = ({ setRowsColumnCount }) => {
   }, []);
 
   useEffect(() => {
+    const LocalResources = JSON.parse(
+      window.sessionStorage.getItem("resources")
+    );
+
+    if (LocalResources && LocalResources.length > 0) {
+      setResources(LocalResources);
+    } else {
+      setResources(initResources);
+    }
+  }, []);
+
+  useEffect(() => {
     setRowsColumnCount((curr) => {
       return { ...curr, rows: resources.length };
     });
+
+    if (resources.length > 0) {
+      window.sessionStorage.setItem("resources", JSON.stringify(resources));
+    }
   }, [resources]);
 
   //AddNewResourceModel useState
