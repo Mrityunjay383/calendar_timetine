@@ -21,6 +21,10 @@ const Events = ({
         return;
       }
 
+      if (events.length === 1) {
+        window.sessionStorage.setItem("events", JSON.stringify([]));
+      }
+
       setEvents((curr) => {
         return curr.filter((event) => event.id !== selectedEventId);
       });
@@ -76,22 +80,10 @@ const Events = ({
             position={{ x: event.pos.x, y: event.pos.y }}
             key={event.id}
             id={event.id}
-            onResize={(e, direction, ref, delta, position) => {
-              // console.log(`#2024140215414402 delta`, delta);
-              // const thisEvent = events.find((ev) => ev.id === event.id);
-              //
-              // thisEvent.width += delta.width;
-              //
-              // const newEvents = events.filter((ev) => ev.id === event.id);
-              //
-              // setEvents([...newEvents, thisEvent]);
-            }}
             onDragStop={(e) => {
-              console.log(`#2024140221540611 e`, e);
-              changeEventPos(e.layerX, e.offsetX, e.layerY, event.id);
-            }}
-            onClick={() => {
               setSelectedEventId(event.id);
+
+              changeEventPos(e.layerX, e.offsetX, e.layerY, event.id);
             }}
           >
             <div

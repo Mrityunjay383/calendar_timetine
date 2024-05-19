@@ -22,6 +22,50 @@ interface event {
   index: number;
 }
 
+const defaultEvents = [
+  {
+    pos: {
+      x: 500,
+      y: locateYpos(200 - 80),
+    },
+    width: 180,
+    color: generateUniqueColor(),
+    id: generateUniqueId(),
+    index: 1,
+  },
+  {
+    pos: {
+      x: 600,
+      y: locateYpos(400 - 80),
+    },
+    width: 100,
+    color: generateUniqueColor(),
+    id: generateUniqueId(),
+    index: 2,
+  },
+  {
+    pos: {
+      x: 1200,
+      y: locateYpos(100 - 80),
+    },
+    width: 150,
+    color: generateUniqueColor(),
+    id: generateUniqueId(),
+    index: 3,
+  },
+
+  {
+    pos: {
+      x: 1800,
+      y: locateYpos(300 - 80),
+    },
+    width: 200,
+    color: generateUniqueColor(),
+    id: generateUniqueId(),
+    index: 3,
+  },
+];
+
 const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
@@ -78,8 +122,6 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
 
       setCurrentEventEle(null);
     }
-
-    console.log(`#2024140221643224 e.pageX`, e.pageX);
   };
 
   useEffect(() => {
@@ -96,6 +138,20 @@ const EventsTable: FC<Props> = ({ rowsColumnCount }) => {
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDragging]);
+
+  useEffect(() => {
+    const LocalEvents = JSON.parse(window.sessionStorage.getItem("events"));
+
+    if (LocalEvents && LocalEvents.length > 0) {
+      setEvents(LocalEvents);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (events.length > 0) {
+      window.sessionStorage.setItem("events", JSON.stringify(events));
+    }
+  }, [events]);
 
   return (
     <div className={classes.main} onMouseDown={handleMouseDown}>

@@ -1,4 +1,4 @@
-export const locateYpos = (ypos: number, max): number => {
+export const locateYpos = (ypos: number, max?: number): number => {
   const heightOfRow: number = 65;
 
   const heightMultiple = Math.floor(ypos / heightOfRow);
