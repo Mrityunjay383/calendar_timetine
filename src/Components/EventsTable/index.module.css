@@ -1,0 +1,18 @@
+.main{
+    left: 10vw;
+    position: absolute;
+    top: 80px;
+    z-index: -2;
+    width: 100%;
+
+}
+.row{
+    height: 7vh;
+    display: flex;
+    width: 155vw;
+}
+.column{
+    border: 1px solid #ccc;
+    border-top: 0;
+    border-right: 0;
+}

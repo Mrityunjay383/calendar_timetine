@@ -1,14 +1,25 @@
 import classes from "./index.module.css";
-import { FC } from "react";
+import { FC, useState } from "react";
 import TopMonthBar from "../../Components/TopMonthBar";
 import TopDateBar from "../../Components/TopDateBar";
 import ResourceSideBar from "../../Components/ResourceSideBar";
+import EventsTable from "../../Components/EventsTable";
 
 interface Props {
   // userName: string;
 }
 
-const Calender: FC<Props> = ({}) => {
+interface rowsColumn {
+  rows: number;
+  columns: number;
+}
+
+const Calender: FC<Props> = () => {
+  const [rowsColumnCount, setRowsColumnCount] = useState<rowsColumn>({
+    rows: 5,
+    columns: 31,
+  });
+
   return (
     <div className={classes.main}>
       <TopMonthBar />
@@ -17,6 +28,7 @@ const Calender: FC<Props> = ({}) => {
         <div className={classes.firstColumn}></div>
         <TopDateBar />
         <ResourceSideBar />
+        <EventsTable rowsColumnCount={rowsColumnCount} />
       </div>
     </div>
   );

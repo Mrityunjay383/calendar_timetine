@@ -45,6 +45,7 @@ const AddNewResourceModel: FC<Props> = ({
     }
 
     setResources((curr) => [...curr, newResourceName]);
+    toast.success("New resource added successfully!");
     setNewResourceName("");
     closeModal();
   };
